@@ -22,6 +22,7 @@ services:
       - "traefik.http.routers.maildev.tls.domains[0].main=mail-dev.genydev.com"
       - "traefik.http.middlewares.maildev-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.maildev.middlewares=maildev-redirect"
+      - "traefik.http.services.maildev.loadbalancer.server.port=1080"
 networks:
   traefikNetwork:
     external: true
