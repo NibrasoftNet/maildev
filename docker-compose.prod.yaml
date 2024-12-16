@@ -1,0 +1,27 @@
+services:
+  maildev:
+    container_name: maildev-prod
+    build:
+      context: .
+      dockerfile: maildev.Dockerfile
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - traefikNetwork
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.maildev.rule=Host(`mail-dev.genydev.com`)"
+      - "traefik.http.routers.maildev.entrypoints=websecure"
+      - "traefik.http.routers.maildev.tls=true"
+      - "traefik.http.routers.maildev.tls.certresolver=le"
+      - "traefik.http.routers.maildev.tls.domains[0].main=mail-dev.genydev.com"
+      - "traefik.http.middlewares.maildev-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.maildev.middlewares=maildev-redirect"
+networks:
+  traefikNetwork:
+    external: true
